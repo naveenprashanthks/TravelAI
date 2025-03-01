@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Hotels - TravelAI</title>
+    <link rel="stylesheet" href="book-hotels.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .search-container {
+            background-color: #f8f9fa;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+        
+        .search-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .form-group {
+            margin-bottom: 0;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .search-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s;
+            margin-top: 24px;
+        }
+        
+        .search-btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .loader {
+            text-align: center;
+            padding: 30px;
+            display: none;
+        }
+        
+        .loader i {
+            font-size: 40px;
+            color: #3498db;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .error-message {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .hotel-price {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2ecc71;
+        }
+        
+        .hotel-rating {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+        }
+        
+        .hotel-rating i {
+            color: #f39c12;
+            margin-right: 5px;
+        }
+        
+        .hotel-address {
+            color: #7f8c8d;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: #7f8c8d;
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .search-form {
+                grid-template-columns: 1fr;
+            }
+            
+            .hotel-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a href="index.html" class="logo">TravelAI</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="plan-travel.html">Plan Travel</a></li>
+                <li><a href="book-hotels.html" class="active">Book Hotels</a></li>
+                <li><a href="login page.html">Login</a></li>
+            </ul>
+            <div class="hamburger">
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="container main-content">
+        <h1 class="page-title">Book Your Perfect Stay</h1>
+        
+        <div class="search-container">
+            <form id="hotel-search-form" class="search-form">
+                <div class="form-group">
+                    <label for="location">Location</label>
+                    <input type="text" id="location" name="location" placeholder="City, Country" required>
+                </div>
+                <div class="form-group">
+                    <label for="check-in">Check-in Date</label>
+                    <input type="date" id="check-in" name="check-in" required>
+                </div>
+                <div class="form-group">
+                    <label for="check-out">Check-out Date</label>
+                    <input type="date" id="check-out" name="check-out" required>
+                </div>
+                <div class="form-group">
+                    <label for="guests">Guests</label>
+                    <select id="guests" name="guests">
+                        <option value="1">1 Guest</option>
+                        <option value="2">2 Guests</option>
+                        <option value="3">3 Guests</option>
+                        <option value="4">4 Guests</option>
+                        <option value="5">5+ Guests</option>
+                    </select>
+                </div>
+                <button type="submit" class="search-btn">Search Hotels</button>
+            </form>
+        </div>
+        
+        <div id="error-message" class="error-message">
+            <p id="error-text">Sorry, we encountered an error while searching for hotels. Please try again later.</p>
+            <p id="error-details" style="font-size: 14px; margin-top: 10px;"></p>
+        </div>
+        
+        <div id="loader" class="loader">
+            <i class="fas fa-spinner"></i>
+            <p>Searching for the best hotels...</p>
+        </div>
+        
+        <div id="no-results" class="no-results">
+            <i class="fas fa-search" style="font-size: 40px; margin-bottom: 15px;"></i>
+            <h3>No hotels found</h3>
+            <p>Try adjusting your search criteria or exploring a different location.</p>
+        </div>
+        
+        <div id="hotel-results" class="hotel-grid">
+            <!-- Hotel results will be displayed here -->
+        </div>
+    </div>
+    
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>TravelAI</h3>
+                    <p>Discover the world with us, one destination at a time.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="Home.html">Home</a></li>
+                        <li><a href="plan-travel.html">Plan Travel</a></li>
+                        <li><a href="book-hotels.html">Book Hotels</a></li>
+                        <li><a href="login page.html">Login</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Contact Us</h3>
+                    <p>Email: info@travelai.com</p>
+                    <p>Phone: +1 (555) 123-4567</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2023 TravelAI. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        // Set default dates (today and tomorrow)
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date();
+            const tomorrow = new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            
+            document.getElementById('check-in').valueAsDate = today;
+            document.getElementById('check-out').valueAsDate = tomorrow;
+            
+            // Check if there's a location in the URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const locationParam = urlParams.get('location');
+            
+            if (locationParam) {
+                document.getElementById('location').value = locationParam;
+                // Auto-search if a location is provided
+                searchHotels(locationParam);
+            }
+        });
+        
+        // Mobile menu toggle
+        document.querySelector('.hamburger').addEventListener('click', function() {
+            document.querySelector('.nav-links').classList.toggle('active');
+            this.classList.toggle('active');
+        });
+        
+        // Form submission
+        document.getElementById('hotel-search-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const location = document.getElementById('location').value;
+            searchHotels(location);
+        });
+        
+        function searchHotels(location) {
+            // Show loader, hide previous results
+            document.getElementById('loader').style.display = 'block';
+            document.getElementById('hotel-results').innerHTML = '';
+            document.getElementById('error-message').style.display = 'none';
+            document.getElementById('no-results').style.display = 'none';
+            
+            // SerpAPI endpoint for Google Hotels
+            const apiKey = '10f812bb483c6bb9f81183eea5055696fe80769b141f31de704fa34d88cd7ace';
+            const checkIn = document.getElementById('check-in').value;
+            const checkOut = document.getElementById('check-out').value;
+            const guests = document.getElementById('guests').value;
+            
+            // Format dates for API
+            const checkInFormatted = formatDateForAPI(checkIn);
+            const checkOutFormatted = formatDateForAPI(checkOut);
+            
+            // Build URL for SerpAPI
+            const url = `https://serpapi.com/search.json?engine=google_hotels&q=hotels+in+${encodeURIComponent(location)}&check_in_date=${checkInFormatted}&check_out_date=${checkOutFormatted}&adults=${guests}&currency=USD&api_key=${apiKey}`;
+            
+            // Log the URL for debugging
+            console.log('Fetching hotels from URL:', url);
+
+            // Fetch data from SerpAPI
+            fetch(url)
+                .then(response => {
+                    if (!response.ok) {
+                        // Get status text and code for better error reporting
+                        throw new Error(`Network response error: ${response.status} ${response.statusText}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Hide loader
+                    document.getElementById('loader').style.display = 'none';
+                    
+                    // Process and display results
+                    if (data.hotels_results && data.hotels_results.length > 0) {
+                        displayHotels(data.hotels_results);
+                    } else {
+                        document.getElementById('no-results').style.display = 'block';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching hotel data:', error);
+                    document.getElementById('loader').style.display = 'none';
+                    
+                    // Update error message with specific details
+                    const errorMessage = document.getElementById('error-message');
+                    const errorText = document.getElementById('error-text');
+                    const errorDetails = document.getElementById('error-details');
+                    
+                    errorMessage.style.display = 'block';
+                    
+                    // Set appropriate error message based on error type
+                    if (error.message.includes('Network response error')) {
+                        errorText.textContent = 'API request failed with error:';
+                        errorDetails.textContent = error.message;
+                    } else if (error.name === 'SyntaxError') {
+                        errorText.textContent = 'Invalid response from hotel service:';
+                        errorDetails.textContent = 'The API returned data in an unexpected format.';
+                    } else if (error.name === 'TypeError' && error.message.includes('Failed to fetch')) {
+                        errorText.textContent = 'Unable to connect to hotel service:';
+                        errorDetails.textContent = 'Please check your internet connection or try again later.';
+                    } else {
+                        errorText.textContent = 'Sorry, we encountered an error while searching for hotels:';
+                        errorDetails.textContent = error.message || 'Unknown error occurred.';
+                    }
+                    
+                    // Log additional debug information
+                    console.log('Search parameters:', {
+                        location: location,
+                        checkIn: checkInFormatted,
+                        checkOut: checkOutFormatted,
+                        guests: guests
+                    });
+                });
+        }
+        
+        function formatDateForAPI(dateString) {
+            // Convert YYYY-MM-DD to YYYY-MM-DD
+            // (Already in correct format, but useful if we need to change format later)
+            return dateString;
+        }
+        
+        function displayHotels(hotels) {
+            const resultsContainer = document.getElementById('hotel-results');
+            resultsContainer.innerHTML = '';
+            
+            hotels.forEach(hotel => {
+                // Create hotel card
+                const hotelCard = document.createElement('div');
+                hotelCard.className = 'hotel-card';
+                
+                // Get hotel image or use placeholder
+                const imageUrl = hotel.thumbnail || 'https://via.placeholder.com/300x200?text=No+Image+Available';
+                
+                // Get price or show default text
+                const priceText = hotel.price 
+                    ? hotel.price 
+                    : 'Price not available';
+                
+                // Format rating
+                const rating = hotel.rating 
+                    ? `<div class="hotel-rating"><i class="fas fa-star"></i> ${hotel.rating}</div>` 
+                    : '';
+                
+                // Build hotel card HTML
+                hotelCard.innerHTML = `
+                    <img src="${imageUrl}" alt="${hotel.name}" class="hotel-image">
+                    <div class="hotel-info">
+                        <h3>${hotel.name}</h3>
+                        ${rating}
+                        <div class="hotel-address">${hotel.address || ''}</div>
+                        <div class="hotel-price">${priceText}</div>
+                        <a href="${hotel.link || '#'}" target="_blank" class="book-now-btn">Book Now</a>
+                    </div>
+                `;
+                
+                resultsContainer.appendChild(hotelCard);
+            });
+        }
+    </script>
+</body>
+</html>
+

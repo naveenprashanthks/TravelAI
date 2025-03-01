@@ -1,0 +1,77 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Home Page Styling */
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background: url('bg.png') no-repeat center center/cover;
+    overflow: hidden;
+}
+
+/* Overlay to enhance text visibility */
+.home {
+    text-align: center;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 50px;
+    border-radius: 12px;
+    color: white;
+    animation: fadeIn 1.5s ease-in-out;
+}
+
+/* Heading Animation */
+h1 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    animation: slideIn 1.5s ease-in-out;
+}
+
+/* Get Started Button */
+button {
+    background-color: #ff6f61;
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.3s ease-in-out;
+}
+
+button:hover {
+    background-color: #ff3b30;
+    transform: scale(1.1);
+}
+
+/* Hidden Login Section */
+.hidden {
+    display: none;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
