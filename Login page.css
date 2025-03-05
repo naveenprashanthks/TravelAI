@@ -1,0 +1,162 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-image: url('bg2.png'); /* Add your travel-themed background */
+    background-size: cover;
+    text-align: center;
+    font-family: Arial, sans-serif;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Flying plane animation */
+@keyframes flyPlane {
+    0% {
+        transform: translateX(-100px) translateY(50px);
+    }
+    100% {
+        transform: translateX(calc(100vw + 100px)) translateY(-50px);
+    }
+}
+
+.flying-plane {
+    position: absolute;
+    top: 20%;
+    left: 0;
+    width: 60px;
+    height: 60px;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M21,16V14L13,9V3.5A1.5,1.5,0,0,0,11.5,2h0A1.5,1.5,0,0,0,10,3.5V9L2,14v2l8-2.5V19l-2,1.5V22l3.5-1h1L15,22V20.5L13,19V13.5Z"/></svg>');
+    background-size: contain;
+    background-repeat: no-repeat;
+    animation: flyPlane 15s linear infinite;
+    z-index: 1;
+}
+
+/* Cloud animations */
+@keyframes floatCloud {
+    0% {
+        transform: translateX(-100px);
+    }
+    100% {
+        transform: translateX(calc(100vw + 100px));
+    }
+}
+
+.cloud {
+    position: absolute;
+    background-color: rgba(255, 255, 255, 0.7);
+    border-radius: 50%;
+    z-index: 1;
+}
+
+.cloud-1 {
+    width: 120px;
+    height: 60px;
+    top: 15%;
+    animation: floatCloud 30s linear infinite;
+}
+
+.cloud-2 {
+    width: 80px;
+    height: 40px;
+    top: 30%;
+    animation: floatCloud 25s linear infinite;
+    animation-delay: 5s;
+}
+
+.cloud-3 {
+    width: 100px;
+    height: 50px;
+    top: 60%;
+    animation: floatCloud 35s linear infinite;
+    animation-delay: 10s;
+}
+
+.login-container {
+    background: rgba(0, 0, 0, 0.7);
+    padding: 30px;
+    border-radius: 10px;
+    color: white;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+    animation: fadeIn 1.5s ease-in-out;
+    position: relative;
+    z-index: 2;
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+button {
+    padding: 10px 20px;
+    background: #ff5722;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+    font-size: 16px;
+    animation: pulseButton 2s infinite;
+    transition: all 0.3s ease;
+}
+
+
+/* Add the cloud and plane elements to the page */
+body:before {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, rgba(135, 206, 235, 0.2), rgba(0, 0, 0, 0));
+    z-index: 0;
+}
+
+/* Media queries for responsiveness */
+@media (max-width: 768px) {
+    .login-container {
+        padding: 20px;
+        width: 80%;
+    }
+    
+    .flying-plane {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .cloud-1, .cloud-2, .cloud-3 {
+        transform: scale(0.8);
+    }
+}
+
+   
+
+
+button:hover {
+    background: #e64a19;
+    transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(255, 87, 34, 0.7);
+}
+
+@keyframes pulseButton {
+    0% {
+        box-shadow: 0 0 0 0 rgba(255, 87, 34, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(255, 87, 34, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(255, 87, 34, 0);
+    }
+}

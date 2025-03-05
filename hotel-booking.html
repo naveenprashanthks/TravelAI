@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hotel Booking</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        header {
+            background-color: #0066cc;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+        
+        .search-section {
+            background-color: white;
+            border-radius: 8px;
+            padding: 2rem;
+            margin: 2rem auto;
+            max-width: 800px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .search-bar {
+            display: flex;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .search-bar input {
+            flex: 1;
+            padding: 12px 20px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px 0 0 4px;
+            outline: none;
+        }
+        
+        .search-bar input:focus {
+            border-color: #0066cc;
+        }
+        
+        .search-bar button {
+            background-color: #0066cc;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 0 4px 4px 0;
+            transition: background-color 0.3s;
+        }
+        
+        .search-bar button:hover {
+            background-color: #0052a3;
+        }
+        
+        .results-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 2rem;
+        }
+        
+        .hotel-card {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        
+        .hotel-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .hotel-image {
+            height: 200px;
+            background-color: #ddd;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .hotel-details {
+            padding: 1rem;
+        }
+        
+        .hotel-name {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: #0066cc;
+        }
+        
+        .hotel-price {
+            font-weight: bold;
+            color: #28a745;
+            margin-bottom: 0.5rem;
+        }
+        
+        .hotel-rating {
+            color: #ff9800;
+            margin-bottom: 0.5rem;
+        }
+        
+        .hotel-description {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+        
+        .book-button {
+            display: inline-block;
+            background-color: #0066cc;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+        
+        .book-button:hover {
+            background-color: #0052a3;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background-color: white;
+            width: 90%;
+            max-width: 500px;
+            border-radius: 8px;
+            padding: 2rem;
+            position: relative;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+        }
+        
+        .booking-form {
+            margin-top: 1rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+        
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .confirm-button {
+            display: block;
+            width: 100%;
+            background-color: #28a745;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 1rem;
+            transition: background-color 0.3s;
+        }
+        
+        .confirm-button:hover {
+            background-color: #218838;
+        }
+        
+        .loading {
+            text-align: center;
+            margin: 2rem;
+            display: none;
+        }
+        
+        .spinner {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #0066cc;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .success-message {
+            text-align: center;
+            background-color: #d4edda;
+            color: #155724;
+            padding: 1rem;
+            border-radius: 4px;
+            margin-top: 1rem;
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .search-bar {
+                flex-direction: column;
+            }
+            
+            .search-bar input, .search-bar button {
+                width: 100%;
+                border-radius: 4px;
+                margin-bottom: 10px;
+            }
+            
+            .results-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Hotel Booking</h1>
+    </header>
+    
+    <div class="container">
+        <section class="search-section">
+            <h2>Find Your Perfect Stay</h2>
+            <p>Enter a location to find affordable hotels</p>
+            <div class="search-bar">
+                <input type="text" id="location-input" placeholder="Enter a city or destination...">
+                <button id="search-button">Search Hotels</button>
+            </div>
+        </section>
+        
+        <div class="loading">
+            <div class="spinner"></div>
+            <p>Searching for hotels...</p>
+        </div>
+        
+        <div id="results-container" class="results-container"></div>
+    </div>
+    
+    <div id="booking-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Book Your Stay</h2>
+            <div id="booking-hotel-info"></div>
+            <form id="booking-form" class="booking-form">
+                <div class="form-group">
+                    <label for="guest-name">Full Name</label>
+                    <input type="text" id="guest-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="guest-email">Email</label>
+                    <input type="email" id="guest-email" required>
+                </div>
+                <div class="form-group">
+                    <label for="check-in">Check-in Date</label>
+                    <input type="date" id="check-in" required>
+                </div>
+                <div class="form-group">
+                    <label for="check-out">Check-out Date</label>
+                    <input type="date" id="check-out" required>
+                </div>
+                <div class="form-group">
+                    <label for="guests">Number of Guests</label>
+                    <select id="guests" required>
+                        <option value="1">1</option>
+                        <option value="2" selected>2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5+</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="room-type">Room Type</label>
+                    <select id="room-type" required>
+                        <option value="standard">Standard</option>
+                        <option value="deluxe">Deluxe</option>
+                        <option value="suite">Suite</option>
+                    </select>
+                </div>
+                <button type="submit" class="confirm-button">Confirm Booking</button>
+            </form>
+            <div class="success-message" id="success-message">
+                <h3>Booking Confirmed!</h3>
+                <p>Your reservation has been successfully booked. A confirmation email has been sent to your email address.</p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set default dates for the booking form
+            const today = new Date();
+            const tomorrow = new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            const nextDay = new Date(today);
+            nextDay.setDate(nextDay.getDate() + 2);
+            
+            document.getElementById('check-in').valueAsDate = tomorrow;
+            document.getElementById('check-out').valueAsDate = nextDay;
+            
+            // Elements
+            const searchButton = document.getElementById('search-button');
+            const locationInput = document.getElementById('location-input');
+            const resultsContainer = document.getElementById('results-container');
+            const loadingIndicator = document.querySelector('.loading');
+            const bookingModal = document.getElementById('booking-modal');
+            const closeModal = document.querySelector('.close-modal');
+            const bookingForm = document.getElementById('booking-form');
+            const successMessage = document.getElementById('success-message');
+            const bookingHotelInfo = document.getElementById('booking-hotel-info');
+        
+            
+            // Event listeners
+            searchButton.addEventListener('click', searchHotels);
+            locationInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    searchHotels();
+                }
+            });
+            
+            closeModal.addEventListener('click', function() {
+                bookingModal.style.display = 'none';
+                successMessage.style.display = 'none';
+                bookingForm.style.display = 'block';
+            });
+            
+            bookingForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                bookingForm.style.display = 'none';
+                successMessage.style.display = 'block';
+                
+                // Reset form after 5 seconds and close modal
+                setTimeout(function() {
+                    bookingModal.style.display = 'none';
+                    successMessage.style.display = 'none';
+                    bookingForm.style.display = 'block';
+                    bookingForm.reset();
+                }, 5000);
+            });
+            
+            // Function to search hotels
+            function searchHotels() {
+                const location = locationInput.value.trim();
+                
+                if (!location) {
+                    alert('Please enter a location');
+                    return;
+                }
+                
+                // Show loading indicator
+                resultsContainer.innerHTML = '';
+                loadingIndicator.style.display = 'block';
+                
+                // In a real application, you would use the Gemini API here
+                // For demonstration, we'll use a timeout to simulate an API call
+                setTimeout(function() {
+                    const prompt = `Find affordable hotels to stay in ${location} with reviews and prices`;
+                    fetchHotelsFromGemini(prompt, location);
+                }, 1500);
+            }
+            
+            // Function to simulate fetching hotels from Gemini API
+            function fetchHotelsFromGemini(prompt, location) {
+                // In a real application, this would be an actual API call to Gemini
+                // For demonstration, we'll generate mock data
+                
+                // Simulated API response
+                const mockHotels = [
+                    {
+                        name: "Comfort Inn " + location,
+                        price: "$89 per night",
+                        rating: "4.2/5",
+                        description: "Comfortable rooms with complimentary breakfast, free WiFi, and a fitness center. Close to major attractions.",
+                        image: "https://source.unsplash.com/random/300x200/?hotel"
+                    },
+                    {
+                        name: "Grand Plaza Hotel",
+                        price: "$120 per night",
+                        rating: "4.5/5", // Fixed missing "/5"
+                        description: "Luxury hotel with spacious rooms, fine dining, and a rooftop pool.",
+                        image: "https://source.unsplash.com/random/300x200/?luxury-hotel"
+                    }
+                ];
+            }
+});
+            
+
+            

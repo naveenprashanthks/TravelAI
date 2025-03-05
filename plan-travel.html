@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plan Your Travel</title>
+    <link rel="stylesheet" href="plan-travel.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Plan with TravelAI</h1>
+            <p>Let us help you create the perfect travel itinerary</p>
+        </header>
+        
+        <main>
+            <section class="travel-form-container">
+                <form id="travel-form">
+                    <div class="form-group">
+                        <label for="destination">Where do you want to go?</label>
+                        <input type="text" id="destination" name="destination" placeholder="e.g., Chennai, Delhi, Kolkata" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="duration">Number of days</label>
+                        <input type="number" id="duration" name="duration" min="1" max="30" placeholder="e.g., 7" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="travelers">How many people?</label>
+                        <input type="number" id="travelers" name="travelers" min="1" max="10" placeholder="e.g., 2" required>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">Generate Travel Plan</button>
+                    </form>
+                    <a href="tour-package.html" class="package-btn">See packages</a>
+            
+            <section class="results-container" id="results">
+                <div class="loading-indicator" id="loading">
+                    <div class="spinner"></div>
+                    <p>Generating your personalized travel plan...</p>
+                </div>
+                <div class="travel-plan" id="travel-plan">
+                    <!-- Travel plan will be inserted here via JavaScript -->
+                    <button class="book-hotels-btn">Book Hotels</button>
+                </div>
+            </section>
+        </main>
+        
+        <footer>
+            <p>&copy; 2025 TravelAI. All rights reserved.</p>
+        </footer>
+    </div>
+    
+    <script src="plan-travel.js"></script>
+</body>
+</html

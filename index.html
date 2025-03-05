@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Booking</title>
+    <link rel="stylesheet" href="index.css">
+    <script defer src="script.js"></script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a href="index.html" class="logo">TravelAI</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="plan-travel.html">Plan Travel</a></li>
+                <li><a href="book-hotels.html">Book Hotels</a></li>
+                <li><a href="tour-package.html">Tour packages</a></li>
+                <li><a href="login page.html">Login</a></li>
+            </ul>
+            <div class="hamburger">
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+            </div>
+        </div>
+    </nav>
+    
+    <div id="animation-container" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;"></div>
+    <div class="home">
+        <h1>Explore The World with TravelAI</h1>
+        <button id="getStarted" onclick="window.location.href='login page.html'">Get Started</button>
+
+    </div>
+
+    <div id="loginSection" class="hidden">
+        <h2>Login with Google</h2>
+        <button id="loginBtn">Login</button>
+    </div>
+
+    <script src="firebase-config.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js"></script>
+    <!-- Three.js library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- Custom background animation -->
+    <script src="background-animation.js"></script>
+    <script>
+        // Initialize the animation when the page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof initBackgroundAnimation === 'function') {
+                initBackgroundAnimation('animation-container');
+            } else {
+                console.error('initBackgroundAnimation function not found');
+            }
+        });
+    </script>
+</body>
+</html>

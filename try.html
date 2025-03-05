@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hotel Search</title>
+    <script>
+        async function fetchHotels() {
+            const location = document.getElementById("location").value;
+            const checkin = document.getElementById("checkin").value;
+            const checkout = document.getElementById("checkout").value;
+            const apiKey = "10f812bb483c6bb9f81183eea5055696fe80769b141f31de704fa34d88cd7ace"; // Replace with a valid API key
+
+            if (!location || !checkin || !checkout) {
+                alert("Please fill in all fields.");
+                return;
+            }
+
+            const url = `https://serpapi.com/search.json?engine=google_hotels&q=${encodeURIComponent(location)}&check_in=${checkin}&check_out=${checkout}&api_key=${apiKey}`;
+            
+            try {
+                document.getElementById("results").innerHTML = "Loading...";
+                
+                const response = await fetch(url);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP Error: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                console.log("API Response:", data); // Debugging - Log API response
+
+                if (data.hotels_results && data.hotels_results.length > 0) {
+                    let hotelList = "";
+                    data.hotels_results.forEach(hotel => {
+                        hotelList += `<div>
+                            <h3>${hotel.name}</h3>
+                            <p>Rating: ${hotel.rating || 'N/A'}</p>
+                            <p>Price: ${hotel.price || 'N/A'}</p>
+                            <p><a href="${hotel.link}" target="_blank">View Hotel</a></p>
+                        </div><hr>`;
+                    });
+                    document.getElementById("results").innerHTML = hotelList;
+                } else {
+                    document.getElementById("results").innerHTML = "No hotels found.";
+                }
+            } catch (error) {
+                document.getElementById("results").innerHTML = `Error fetching data: ${error.message}`;
+                console.error("Error:", error);
+            }
+        }
+    </script>
+</head>
+<body>
+    <h2>Hotel Search</h2>
+    <label>Location: <input type="text" id="location" placeholder="Enter city"></label>
+    <label>Check-in: <input type="date" id="checkin"></label>
+    <label>Check-out: <input type="date" id="checkout"></label>
+    <button onclick="fetchHotels()">Search</button>
+    <div id="results"></div>
+</body>
+</html>
